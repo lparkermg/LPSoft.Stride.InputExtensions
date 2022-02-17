@@ -19,7 +19,12 @@ namespace BuildInputConfig
         /// <param name="inputMap">A <see cref="IDictionary{string, VirtualButton}"/> mapping.</param>
         public void FromDictionary(IDictionary<string, VirtualButton> inputMap)
         {
-            throw new ArgumentException("A dictionary must be provided.");
+            if (inputMap == null)
+            {
+                throw new ArgumentException("A dictionary must be provided.");
+            }
+
+            throw new ArgumentException("A dictionary must not be empty.");
         }
 
         /// <summary>
