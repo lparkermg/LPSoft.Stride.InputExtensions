@@ -32,5 +32,14 @@ namespace BuildInputConfig.Tests
         {
             Assert.That(() => _builder.FromDictionary(new Dictionary<string, VirtualButton>()), Throws.ArgumentException.With.Message.EqualTo("A dictionary must not be empty."));
         }
+
+        [TestCase("")]
+        [TestCase("        ")]
+        public void FromDictionary_GivenDictionaryWithEmptyOrWhitespaceKeys_ThrowsArgumentException(string keyValue)
+        {
+            var dictionary = new Dictionary<string, VirtualButton>();
+            dictionary.Add(keyValue, VirtualButton.GamePad.Back);
+            Assert.That(() => _builder.FromDictionary(dictionary), Throws.ArgumentException.With.Message.EqualTo("A dictionary cannot have empty or whitespace keys."));
+        }
     }
 }

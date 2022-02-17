@@ -24,7 +24,12 @@ namespace BuildInputConfig
                 throw new ArgumentException("A dictionary must be provided.");
             }
 
-            throw new ArgumentException("A dictionary must not be empty.");
+            if (inputMap.Count == 0)
+            {
+                throw new ArgumentException("A dictionary must not be empty.");
+            }
+
+            throw new ArgumentException("A dictionary cannot have empty or whitespace keys.");
         }
 
         /// <summary>
