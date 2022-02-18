@@ -14,11 +14,14 @@ namespace BuildInputConfig
     /// </summary>
     public class InputBuilder
     {
+        private IDictionary<string, VirtualButton> _builderState = new Dictionary<string, VirtualButton>();
+
         /// <summary>
         /// Loads a dictionary based input map.
         /// </summary>
         /// <param name="inputMap">A <see cref="IDictionary{string, VirtualButton}"/> mapping.</param>
-        public void FromDictionary(IDictionary<string, VirtualButton> inputMap)
+        /// <returns>The <see cref="InputBuilder"/> object.</returns>
+        public InputBuilder FromDictionary(IDictionary<string, VirtualButton> inputMap)
         {
             if (inputMap == null)
             {
@@ -35,7 +38,17 @@ namespace BuildInputConfig
                 throw new ArgumentException("A dictionary cannot have empty or whitespace keys.");
             }
 
-            throw new ArgumentException("A dictionary cannot have a null value.");
+            if (inputMap.Any(i => i.Value == null))
+            {
+                throw new ArgumentException("A dictionary cannot have a null value.");
+            }
+
+            foreach (var item in inputMap)
+            {
+                _builderState.Add(item.Key, item.Value);
+            }
+
+            return this;
         }
 
         /// <summary>
@@ -44,7 +57,14 @@ namespace BuildInputConfig
         /// <returns>A populated <see cref="VirtualButtonConfig"/>.</returns>
         public VirtualButtonConfig Build()
         {
-            return new VirtualButtonConfig();
+            var config = new VirtualButtonConfig();
+
+            foreach (var item in _builderState)
+            {
+                config.Add(new VirtualButtonBinding(item.Key, item.Value));
+            }
+
+            return config;
         }
     }
 }
