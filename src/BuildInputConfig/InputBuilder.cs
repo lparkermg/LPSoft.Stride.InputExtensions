@@ -6,6 +6,7 @@ namespace BuildInputConfig
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using Stride.Input;
 
     /// <summary>
@@ -29,7 +30,12 @@ namespace BuildInputConfig
                 throw new ArgumentException("A dictionary must not be empty.");
             }
 
-            throw new ArgumentException("A dictionary cannot have empty or whitespace keys.");
+            if (inputMap.Any(i => string.IsNullOrWhiteSpace(i.Key)))
+            {
+                throw new ArgumentException("A dictionary cannot have empty or whitespace keys.");
+            }
+
+            throw new ArgumentException("A dictionary cannot have a null value.");
         }
 
         /// <summary>

@@ -37,9 +37,33 @@ namespace BuildInputConfig.Tests
         [TestCase("        ")]
         public void FromDictionary_GivenDictionaryWithEmptyOrWhitespaceKeys_ThrowsArgumentException(string keyValue)
         {
-            var dictionary = new Dictionary<string, VirtualButton>();
-            dictionary.Add(keyValue, VirtualButton.GamePad.Back);
+            var dictionary = new Dictionary<string, VirtualButton>
+            {
+                { keyValue, VirtualButton.GamePad.Back }
+            };
             Assert.That(() => _builder.FromDictionary(dictionary), Throws.ArgumentException.With.Message.EqualTo("A dictionary cannot have empty or whitespace keys."));
+        }
+
+        [TestCase("")]
+        [TestCase("        ")]
+        public void FromDictionary_GivenMultipleEntryDictionaryWithEmptyOrWhitespaceKey_ThrowsArgumentException(string keyValue)
+        {
+            var dictionary = new Dictionary<string, VirtualButton>
+            {
+                { "Test", VirtualButton.GamePad.B },
+                { keyValue, VirtualButton.GamePad.Back }
+            };
+            Assert.That(() => _builder.FromDictionary(dictionary), Throws.ArgumentException.With.Message.EqualTo("A dictionary cannot have empty or whitespace keys."));
+        }
+
+        [Test]
+        public void FromDictionary_GivenNullValue_ThrowsArgumentException()
+        {
+            var dictionary = new Dictionary<string, VirtualButton>
+            {
+                { "Test", null }
+            };
+            Assert.That(() => _builder.FromDictionary(dictionary), Throws.ArgumentException.With.Message.EqualTo("A dictionary cannot have a null value."));
         }
     }
 }
