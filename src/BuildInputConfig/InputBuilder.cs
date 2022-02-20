@@ -57,7 +57,8 @@ namespace BuildInputConfig
         /// Loads the specified json file as the input map.
         /// </summary>
         /// <param name="filePath">Path to the json file.</param>
-        public void FromJson(string filePath)
+        /// <returns>The <see cref="InputBuilder"/> object.</returns>
+        public InputBuilder FromJson(string filePath)
         {
             if (string.IsNullOrWhiteSpace(filePath))
             {
@@ -87,9 +88,18 @@ namespace BuildInputConfig
                         {
                             throw new FormatException($"Any value of '{entry.Key}' cannot be empty or whitespace.");
                         }
+
+                        if (entry.Value.Any(v => VirtualButton.Find(v) == null))
+                        {
+                            throw new FormatException($"Values of '{entry.Key}' must be valid.");
+                        }
+
+                        _builderState.Add(entry.Key, entry.Value.Select(v => VirtualButton.Find(v)).ToArray());
                     }
                 }
             }
+
+            return this;
         }
 
         /// <summary>

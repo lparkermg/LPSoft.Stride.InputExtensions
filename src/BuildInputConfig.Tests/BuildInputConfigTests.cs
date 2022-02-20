@@ -225,8 +225,44 @@ namespace BuildInputConfig.Tests
         [TestCase("\"      \"")]
         public void FromJson_GivenMultipleValuesWhereOneArrayValueThatIsEmptyOrWhiteSpace_ThrowsFormatException(string value)
         {
-            _jsonFilePath = CreateJsonFile("file.json", "{" + $"\"Test Key\":[\"Keyboard:A\", {value}, \"GamePad:A\"]" + "}");
+            _jsonFilePath = CreateJsonFile("file.json", "{" + $"\"Test Key\":[\"Keyboard.A\", {value}, \"GamePad.A\"]" + "}");
             Assert.That(() => _builder.FromJson(_jsonFilePath), Throws.TypeOf<FormatException>().With.Message.EqualTo("Any value of 'Test Key' cannot be empty or whitespace."));
+        }
+
+        [TestCase("Test.Button")]
+        [TestCase("GamePad.Test")]
+        [TestCase("Keyboad.AB")]
+        [TestCase("Mouse.Test")]
+        [TestCase("Pointer.Test")]
+        public void FromJson_GivenInvalidValue_ThrowsFormatException(string value)
+        {
+            _jsonFilePath = CreateJsonFile("file.json", "{" + $"\"Test Key\":[\"{value}\"]" + "}");
+            Assert.That(() => _builder.FromJson(_jsonFilePath), Throws.TypeOf<FormatException>().With.Message.EqualTo("Values of 'Test Key' must be valid."));
+        }
+
+        [Test]
+        public void Build_GivenValidFromJson_PopulatesConfig()
+        {
+            _jsonFilePath = CreateJsonFile("file.json", "{" + $"\"Test Key\":[\"GamePad.A\", \"Keyboard.space\", \"Mouse.Left\"]" + "}");
+
+            var result = _builder.FromJson(_jsonFilePath).Build();
+            Assert.That(result, Has.Exactly(3).Items);
+
+            Assert.Multiple(() =>
+            {
+                var a = result[0];
+                Assert.That(a.Name.ToString(), Is.EqualTo("Test Key"));
+                Assert.That(((VirtualButton)a.Button).Name, Is.EqualTo(VirtualButton.GamePad.A.Name));
+
+                var space = result[1];
+                Assert.That(space.Name.ToString(), Is.EqualTo("Test Key"));
+                Assert.That(((VirtualButton)space.Button).Name, Is.EqualTo(VirtualButton.Keyboard.Space.Name));
+
+                var left = result[2];
+                Assert.That(left.Name.ToString(), Is.EqualTo("Test Key"));
+                Assert.That(((VirtualButton)left.Button).Name, Is.EqualTo(VirtualButton.Mouse.Left.Name));
+            });
+
         }
 
         [TearDown]
