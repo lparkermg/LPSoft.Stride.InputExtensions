@@ -1,3 +1,4 @@
+using LPSoft.Stride.InputExtensions.BuildInputConfig;
 using NUnit.Framework;
 using Stride.Input;
 using System;

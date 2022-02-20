@@ -1,15 +1,15 @@
-﻿// <copyright file="BuildInputConfig.cs" company="Luke Parker">
+﻿// <copyright file="InputBuilder.cs" company="Luke Parker">
 // Copyright (c) Luke Parker. All rights reserved.
 // </copyright>
 
-namespace BuildInputConfig
+namespace LPSoft.Stride.InputExtensions.BuildInputConfig
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Text.Json;
-    using Stride.Input;
+    using global::Stride.Input;
 
     /// <summary>
     /// Builds up a virtual button config.

@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <AssemblyName>LPSoft.Stride.InputExtensions.BuildInputConfig</AssemblyName>
+    <RootNamespace>LPSoft.Stride.InputExtensions.BuildInputConfig</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
