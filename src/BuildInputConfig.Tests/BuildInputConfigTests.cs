@@ -221,6 +221,14 @@ namespace BuildInputConfig.Tests
             Assert.That(() => _builder.FromJson(_jsonFilePath), Throws.TypeOf<FormatException>().With.Message.EqualTo("'Test Key' cannot be empty."));
         }
 
+        [TestCase("\"\"")]
+        [TestCase("\"      \"")]
+        public void FromJson_GivenMultipleValuesWhereOneArrayValueThatIsEmptyOrWhiteSpace_ThrowsFormatException(string value)
+        {
+            _jsonFilePath = CreateJsonFile("file.json", "{" + $"\"Test Key\":[\"Keyboard:A\", {value}, \"GamePad:A\"]" + "}");
+            Assert.That(() => _builder.FromJson(_jsonFilePath), Throws.TypeOf<FormatException>().With.Message.EqualTo("Any value of 'Test Key' cannot be empty or whitespace."));
+        }
+
         [TearDown]
         public void TearDown()
         {
