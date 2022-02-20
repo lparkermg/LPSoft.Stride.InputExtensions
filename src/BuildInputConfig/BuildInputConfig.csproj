@@ -4,6 +4,17 @@
     <TargetFramework>net5.0</TargetFramework>
     <AssemblyName>LPSoft.Stride.InputExtensions.BuildInputConfig</AssemblyName>
     <RootNamespace>LPSoft.Stride.InputExtensions.BuildInputConfig</RootNamespace>
+    <Company>Luke Parker</Company>
+    <Authors>Luke Parker</Authors>
+    <PackageLicenseFile></PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/lparkermg/LPSoft.Stride.InputExtensions</PackageProjectUrl>
+    <PackageLicenseExpression>https://github.com/lparkermg/LPSoft.Stride.InputExtensions/blob/main/LICENSE</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/lparkermg/LPSoft.Stride.InputExtensions/</RepositoryUrl>
+    <PackageReleaseNotes>Initial Version</PackageReleaseNotes>
+    <Description>Provides a builder to build up VirtualButtonConfig objects.</Description>
+    <Version>1.0.1</Version>
+    <NeutralLanguage>English</NeutralLanguage>
+    <Copyright>Copyright by Luke Parker (2022)</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
