@@ -77,6 +77,16 @@ namespace BuildInputConfig
                         {
                             throw new FormatException($"Value of '{entry.Key}' cannot be null.");
                         }
+
+                        if (entry.Value.Length == 0)
+                        {
+                            throw new FormatException($"'{entry.Key}' cannot be empty.");
+                        }
+
+                        if (entry.Value.Any(v => string.IsNullOrWhiteSpace(v)))
+                        {
+                            throw new FormatException($"Any value of '{entry.Key}' cannot be empty or whitespace.");
+                        }
                     }
                 }
             }
