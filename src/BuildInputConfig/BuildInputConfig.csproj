@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <AssemblyName>LPSoft.Stride.InputExtensions.BuildInputConfig</AssemblyName>
+    <RootNamespace>LPSoft.Stride.InputExtensions.BuildInputConfig</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="LPSoft.CSharp.Codestyles" Version="0.0.1-alpha">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Stride.Input" Version="4.0.1.1428" />
+  </ItemGroup>
+
+</Project>
