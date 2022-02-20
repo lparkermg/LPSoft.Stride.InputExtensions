@@ -1,12 +1,30 @@
 using NUnit.Framework;
 using Stride.Input;
 using System.Collections.Generic;
+using System.IO;
+using System.Text.Json;
 
 namespace BuildInputConfig.Tests
 {
     public class BuildInputConfigTests
     {
         private InputBuilder _builder;
+        private string _invalidJsonFilePath;
+        private string _invalidJson = "This is not a json file";
+
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
+        {
+            _invalidJsonFilePath = Path.Combine(Path.GetTempPath(), "input-extensions-invalid.json");
+            using (var fs = File.Create(_invalidJsonFilePath))
+            {
+                using (var sw = new StreamWriter(fs))
+                {
+                    sw.Write(_invalidJson);
+                }
+                fs.Close();
+            }
+        }
 
         [SetUp]
         public void SetUp()
@@ -147,6 +165,26 @@ namespace BuildInputConfig.Tests
                 Assert.That(up3.Name.ToString(), Is.EqualTo("TestUp"));
                 Assert.That(((VirtualButton)up3.Button).Name, Is.EqualTo(VirtualButton.Keyboard.Up.Name));
             });
+        }
+
+        [TestCase("")]
+        [TestCase("     ")]
+        [TestCase(null)]
+        public void FromJson_GivenNullEmptyOrWhiteSpaceFileName_ThrowsArgumentException(string fileName)
+        {
+            Assert.That(() => _builder.FromJson(fileName), Throws.ArgumentException.With.Message.EqualTo("A filepath cannot be null, empty of whitespace."));
+        }
+
+        [Test]
+        public void FromJson_GivenInvalidJsonFile_ThrowsJsonException()
+        {
+            Assert.That(() => _builder.FromJson(_invalidJsonFilePath), Throws.TypeOf<JsonException>());
+        }
+
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            File.Delete(_invalidJsonFilePath);
         }
     }
 }

@@ -6,7 +6,9 @@ namespace BuildInputConfig
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
+    using System.Text.Json;
     using Stride.Input;
 
     /// <summary>
@@ -49,6 +51,27 @@ namespace BuildInputConfig
             }
 
             return this;
+        }
+
+        /// <summary>
+        /// Loads the specified json file as the input map.
+        /// </summary>
+        /// <param name="filePath">Path to the json file.</param>
+        public void FromJson(string filePath)
+        {
+            if (string.IsNullOrWhiteSpace(filePath))
+            {
+                throw new ArgumentException("A filepath cannot be null, empty of whitespace.");
+            }
+
+            using (var fs = File.Open(filePath, FileMode.Open))
+            {
+                using (var sr = new StreamReader(fs))
+                {
+                    var fileData = sr.ReadToEnd();
+                    var data = JsonSerializer.Deserialize<Dictionary<string, string[]>>(fileData);
+                }
+            }
         }
 
         /// <summary>
