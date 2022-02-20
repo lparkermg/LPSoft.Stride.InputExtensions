@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using Stride.Input;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
@@ -11,19 +12,27 @@ namespace BuildInputConfig.Tests
         private InputBuilder _builder;
         private string _invalidJsonFilePath;
         private string _invalidJson = "This is not a json file";
+        private string _jsonFilePath;
+
+        private string CreateJsonFile(string fileName, string fileData)
+        {
+            var filePath = Path.Combine(Path.GetTempPath(), fileName);
+            using (var fs = File.Create(filePath))
+            {
+                using (var sw = new StreamWriter(fs))
+                {
+                    sw.Write(fileData);
+                }
+                fs.Close();
+            }
+
+            return filePath;
+        }
 
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
-            _invalidJsonFilePath = Path.Combine(Path.GetTempPath(), "input-extensions-invalid.json");
-            using (var fs = File.Create(_invalidJsonFilePath))
-            {
-                using (var sw = new StreamWriter(fs))
-                {
-                    sw.Write(_invalidJson);
-                }
-                fs.Close();
-            }
+            _invalidJsonFilePath = CreateJsonFile("invalid-file.json", _invalidJson);
         }
 
         [SetUp]
@@ -179,6 +188,32 @@ namespace BuildInputConfig.Tests
         public void FromJson_GivenInvalidJsonFile_ThrowsJsonException()
         {
             Assert.That(() => _builder.FromJson(_invalidJsonFilePath), Throws.TypeOf<JsonException>());
+        }
+
+        [TestCase("")]
+        [TestCase("      ")]
+        [TestCase(null)]
+        public void FromJson_GivenKeyThatIsNullEmptyOrWhitespace_ThrowsJsonException(string keyData)
+        {
+            _jsonFilePath = CreateJsonFile("file.json", "{"+$"{keyData}"+":[\"Test Data\"]}");
+            Assert.That(() => _builder.FromJson(_jsonFilePath), Throws.TypeOf<JsonException>());
+        }
+
+        [Test]
+        public void FromJson_GivenValueThatIsNull_ThrowsFormatException()
+        {
+            _jsonFilePath = CreateJsonFile("file.json", "{" + $"\"Test Key\":null" + "}");
+            Assert.That(() => _builder.FromJson(_jsonFilePath), Throws.TypeOf<FormatException>().With.Message.EqualTo("Value of 'Test Key' cannot be null."));
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            if (!string.IsNullOrWhiteSpace(_jsonFilePath))
+            {
+                File.Delete(_jsonFilePath);
+                _jsonFilePath = null;
+            }
         }
 
         [OneTimeTearDown]

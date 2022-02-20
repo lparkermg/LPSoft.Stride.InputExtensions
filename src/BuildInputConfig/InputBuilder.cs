@@ -70,6 +70,14 @@ namespace BuildInputConfig
                 {
                     var fileData = sr.ReadToEnd();
                     var data = JsonSerializer.Deserialize<Dictionary<string, string[]>>(fileData);
+
+                    foreach (var entry in data)
+                    {
+                        if (entry.Value == null)
+                        {
+                            throw new FormatException($"Value of '{entry.Key}' cannot be null.");
+                        }
+                    }
                 }
             }
         }
